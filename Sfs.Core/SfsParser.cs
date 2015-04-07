@@ -65,7 +65,13 @@ namespace Sfs.Core
             from close in Parse.Char('}')
             select new SfsNotTag(name, options);
 
-        internal static Parser<SfsSyntaxUnit> AnyTag = Tag.Or(NotTag);
+        internal static Parser<SfsSyntaxUnit> SimpleTag =
+            from open in Parse.String("{")
+            from name in MultiId
+            from close in Parse.Char('}')
+            select new SfsSimpleTag(name);
+
+        internal static Parser<SfsSyntaxUnit> AnyTag = Tag.Or(NotTag).Or(SimpleTag);
 
         internal static Parser<SfsSyntaxUnit> Text =
             Parse.CharExcept(new[] {'{', '}', '~'})

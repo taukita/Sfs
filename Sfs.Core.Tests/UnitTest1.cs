@@ -94,5 +94,14 @@ namespace Sfs.Core.Tests
             Assert.AreEqual("F", "{a.b:T|F}".SfsFormat(new {a = new {b = (object) null}}));
             Assert.AreEqual("T", "{!a.b:T|F}".SfsFormat(new {a = new {b = (object) null}}));
         }
+
+        [TestMethod]
+        public void SimpleInterpolation()
+        {
+            Assert.AreEqual("interpolation works", "interpolation {result}".SfsFormat(new {result = "works"}));
+            Assert.AreEqual(
+                "interpolation still works",
+                "interpolation still {result.result}".SfsFormat(new { result = new { result = "works" } }));
+        }
     }
 }

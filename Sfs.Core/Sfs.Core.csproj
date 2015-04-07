@@ -47,6 +47,7 @@
     <Compile Include="SfsSyntaxUnit.cs" />
     <Compile Include="StringExt.cs" />
     <Compile Include="SyntaxUnits\SfsNotTag.cs" />
+    <Compile Include="SyntaxUnits\SfsSimpleTag.cs" />
     <Compile Include="SyntaxUnits\SfsSyntaxUnits.cs" />
     <Compile Include="SyntaxUnits\SfsTag.cs" />
     <Compile Include="SyntaxUnits\SfsText.cs" />
