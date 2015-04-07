@@ -1,0 +1,5 @@
+syntax: glob
+*/bin/*
+*/obj/*
+Sfs.sln.DotSettings.user
+Sfs.v11.suo
