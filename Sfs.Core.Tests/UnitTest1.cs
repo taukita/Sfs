@@ -102,6 +102,9 @@ namespace Sfs.Core.Tests
             Assert.AreEqual(
                 "interpolation still works",
                 "interpolation still {result.result}".SfsFormat(new { result = new { result = "works" } }));
+            Assert.AreEqual(
+                "null is empty string",
+                "null is empty string{spoiler}".SfsFormat(new {spoiler = (object) null}));
         }
     }
 }

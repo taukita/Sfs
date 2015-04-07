@@ -17,7 +17,8 @@ namespace Sfs.Core.SyntaxUnits
 
         public override string Reduce(object context)
         {
-            return GetNamedValue(context, _ids as string[] ?? _ids.ToArray()).ToString();
+            var namedValue = GetNamedValue(context, _ids as string[] ?? _ids.ToArray());
+            return namedValue == null ? string.Empty : namedValue.ToString();
         }
     }
 }
