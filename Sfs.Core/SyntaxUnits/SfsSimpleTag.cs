@@ -18,7 +18,12 @@ namespace Sfs.Core.SyntaxUnits
         public override string Reduce(object context)
         {
             var namedValue = GetNamedValue(context, _ids as string[] ?? _ids.ToArray());
-            return namedValue == null ? string.Empty : namedValue.ToString();
+            return namedValue?.ToString() ?? string.Empty;
         }
+
+	    protected internal override void CollectIds(HashSet<string> ids)
+	    {
+		    ids.Add(string.Join(".", _ids));
+	    }
     }
 }

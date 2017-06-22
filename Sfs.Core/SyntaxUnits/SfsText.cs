@@ -19,5 +19,10 @@ namespace Sfs.Core.SyntaxUnits
         {
             return _value;
         }
+
+	    protected internal override void CollectIds(HashSet<string> ids)
+	    {
+		    //Do nothing
+	    }
     }
 }

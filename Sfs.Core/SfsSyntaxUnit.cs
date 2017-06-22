@@ -8,9 +8,18 @@ namespace Sfs.Core
 {
     public abstract class SfsSyntaxUnit
     {
-        public abstract string Reduce(object context);
+		public HashSet<string> CollectIds()
+		{
+			var ids = new HashSet<string>();
+			CollectIds(ids);
+			return ids;
+		}
 
-        protected static object GetNamedValue(object context, string[] ids)
+		public abstract string Reduce(object context);
+
+	    protected internal abstract void CollectIds(HashSet<string> ids);
+
+		protected static object GetNamedValue(object context, string[] ids)
         {
             while (true)
             {

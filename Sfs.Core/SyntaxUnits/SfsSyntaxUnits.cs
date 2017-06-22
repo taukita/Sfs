@@ -19,5 +19,13 @@ namespace Sfs.Core.SyntaxUnits
         {
             return string.Join("", _syntaxUnits.Select(u => u.Reduce(context)));
         }
+
+	    protected internal override void CollectIds(HashSet<string> ids)
+	    {
+		    foreach (var unit in _syntaxUnits)
+		    {
+			    unit.CollectIds(ids);
+		    }
+	    }
     }
 }

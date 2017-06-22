@@ -61,5 +61,14 @@ namespace Sfs.Core.SyntaxUnits
             }
             return values.Length > 1 ? values[1].Reduce(context) : string.Empty;
         }
+
+	    protected internal override void CollectIds(HashSet<string> ids)
+	    {
+			ids.Add(string.Join(".", Ids));
+		    foreach (var unit in Values)
+		    {
+			    unit.CollectIds(ids);
+		    }
+		}
     }
 }

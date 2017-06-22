@@ -13,5 +13,10 @@ namespace Sfs.Core
             var unit = SfsParser.ParseAll(s);
             return unit.Reduce(context);
         }
+
+	    public static SfsSyntaxUnit SfsParse(this string s)
+	    {
+			return SfsParser.ParseAll(s);
+		}
     }
 }

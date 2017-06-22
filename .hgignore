@@ -3,3 +3,4 @@ syntax: glob
 */obj/*
 Sfs.sln.DotSettings.user
 Sfs.v11.suo
+.vs/Sfs/v14/.suo
