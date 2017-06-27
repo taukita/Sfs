@@ -8,6 +8,8 @@ namespace Sfs.Core
 {
     public abstract class SfsSyntaxUnit
     {
+	    public abstract void Accept(ICompiler compiler);
+
 		public HashSet<string> CollectIds()
 		{
 			var ids = new HashSet<string>();

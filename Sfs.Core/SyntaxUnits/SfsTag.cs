@@ -23,7 +23,12 @@ namespace Sfs.Core.SyntaxUnits
             Values = values;
         }
 
-        public override string Reduce(object context)
+	    public override void Accept(ICompiler compiler)
+	    {
+		    throw new NotImplementedException();
+	    }
+
+	    public override string Reduce(object context)
         {
             var values = Values as SfsSyntaxUnit[] ?? Values.ToArray();
             var namedValue = GetNamedValue(context, Ids as string[] ?? Ids.ToArray());

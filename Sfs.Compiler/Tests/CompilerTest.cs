@@ -21,6 +21,70 @@ namespace Sfs.Compiler.Tests
 			CheckTypeWithFields(assembly, "Context_b_c", "d");
 		}
 
+		[Test]
+		public void CompileGeneratorTest1()
+		{
+			Assembly assembly = Compiler.Compile("MyCompiledAssembly", "");
+			var instance = assembly.CreateInstance("Generator");
+			Assert.IsNotNull(instance);
+			var mi = instance.GetType().GetMethod("Generate");
+			Assert.IsNotNull(mi);
+			Assert.AreEqual(string.Empty, mi.Invoke(instance, new object[] {null}));
+		}
+
+		[Test]
+		public void CompileGeneratorTest2()
+		{
+			Assembly assembly = Compiler.Compile("MyCompiledAssembly", "абырвалг");
+			var instance = assembly.CreateInstance("Generator");
+			Assert.IsNotNull(instance);
+			var mi = instance.GetType().GetMethod("Generate");
+			Assert.IsNotNull(mi);
+			Assert.AreEqual("абырвалг", mi.Invoke(instance, new object[] { null }));
+		}
+
+		[Test]
+		public void CompileGeneratorTest3()
+		{
+			Assembly assembly = Compiler.Compile("MyCompiledAssembly", "абыр{tag}валг");
+			var generator = assembly.CreateInstance("Generator");
+			var context = assembly.CreateInstance("Context");
+			Assert.IsNotNull(generator);
+			Assert.IsNotNull(context);
+			var mi = generator.GetType().GetMethod("Generate");
+			Assert.IsNotNull(mi);
+			Assert.AreEqual("абырвалг", mi.Invoke(generator, new[] { context }));
+		}
+
+		[Test]
+		public void CompileGeneratorTest4()
+		{
+			Assembly assembly = Compiler.Compile("MyCompiledAssembly", "{tag}");
+			var generator = assembly.CreateInstance("Generator");
+			var context = assembly.CreateInstance("Context");
+			Assert.IsNotNull(generator);
+			Assert.IsNotNull(context);
+			context.GetType().GetField("tag").SetValue(context, "абырвалг");
+			var mi = generator.GetType().GetMethod("Generate");
+			Assert.IsNotNull(mi);
+			Assert.AreEqual("абырвалг", mi.Invoke(generator, new[] { context }));
+		}
+
+		[Test]
+		public void CompileGeneratorTest5()
+		{
+			Assembly assembly = Compiler.Compile("MyCompiledAssembly", "{tag1}{tag2}");
+			var generator = assembly.CreateInstance("Generator");
+			var context = assembly.CreateInstance("Context");
+			Assert.IsNotNull(generator);
+			Assert.IsNotNull(context);
+			context.GetType().GetField("tag1").SetValue(context, "абыр");
+			context.GetType().GetField("tag2").SetValue(context, "валг");
+			var mi = generator.GetType().GetMethod("Generate");
+			Assert.IsNotNull(mi);
+			Assert.AreEqual("абырвалг", mi.Invoke(generator, new[] { context }));
+		}
+
 		private void CheckTypeWithFields(Assembly assembly, string typeName, params string[] fieldNames)
 		{
 			var instance = assembly.CreateInstance(typeName);

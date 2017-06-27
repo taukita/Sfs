@@ -15,12 +15,17 @@ namespace Sfs.Compiler
 		{
 			var cc = new CompilerContext(name);
 
-			CompileContextType(cc, code.SfsParse());
+			var unit = code.SfsParse();
+			var contextType = CompileContextType(cc, unit);
+			var typeBuilder = cc.ModuleBuilder.DefineType("Generator", TypeAttributes.Public);
+			var compilerVisitor = new CompilerVisitor(contextType, typeBuilder);
+			unit.Accept(compilerVisitor);
+			typeBuilder.CreateType();
 
 			return cc.AssemblyBuilder;
 		}
 
-		private static void CompileContextType(CompilerContext cc, SfsSyntaxUnit unit)
+		private static Type CompileContextType(CompilerContext cc, SfsSyntaxUnit unit)
 		{
 			var typeBuilder = cc.ModuleBuilder.DefineType("Context", TypeAttributes.Public);
 			var node = IdNode.FromIds(unit.CollectIds());
@@ -29,7 +34,7 @@ namespace Sfs.Compiler
 				var type = CompileContextType(cc, new[] { "Context", child.Id}, child);
 				typeBuilder.DefineField(child.Id, type, FieldAttributes.Public);
 			}
-			typeBuilder.CreateType();
+			return typeBuilder.CreateType();
 		}
 
 		private static Type CompileContextType(CompilerContext cc, IEnumerable<string> path, IdNode node)
