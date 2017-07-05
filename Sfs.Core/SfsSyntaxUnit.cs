@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,6 +34,18 @@ namespace Sfs.Core
                 context = namedValue;
                 ids = ids.Skip(1).ToArray();
             }
+        }
+
+        protected static Type LoadContextField(ILGenerator generator, IEnumerable<string> ids, Type type)
+        {
+            generator.Emit(OpCodes.Ldarg_1);
+            foreach (var id in ids)
+            {
+                var fieldInfo = type.GetField(id);
+                generator.Emit(OpCodes.Ldfld, fieldInfo);
+                type = fieldInfo.FieldType;
+            }
+            return type;
         }
     }
 }

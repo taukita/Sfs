@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using System.Reflection.Emit;
 
 namespace Sfs.Compiler.Tests
 {
@@ -85,7 +86,53 @@ namespace Sfs.Compiler.Tests
 			Assert.AreEqual("абырвалг", mi.Invoke(generator, new[] { context }));
 		}
 
-		private void CheckTypeWithFields(Assembly assembly, string typeName, params string[] fieldNames)
+        [Test]
+        public void CompileGeneratorTest6()
+        {
+            Assembly assembly = Compiler.Compile("MyCompiledAssembly", "{a:1|2|3}");
+            var generator = assembly.CreateInstance("Generator");
+            var context = assembly.CreateInstance("Context");
+            Assert.IsNotNull(generator);
+            Assert.IsNotNull(context);
+            context.GetType().GetField("a").SetValue(context, Nth.Second);
+            var mi = generator.GetType().GetMethod("Generate");
+            Assert.IsNotNull(mi);
+            Assert.AreEqual("2", mi.Invoke(generator, new[] { context }));
+        }
+
+        [Test]
+        public void CompileGeneratorTest7()
+        {
+            Assembly assembly = Compiler.Compile("MyCompiledAssembly", "{a:T|F}");
+            var generator = assembly.CreateInstance("Generator");
+            var context = assembly.CreateInstance("Context");
+            Assert.IsNotNull(generator);
+            Assert.IsNotNull(context);            
+            var mi = generator.GetType().GetMethod("Generate");
+            Assert.IsNotNull(mi);
+            context.GetType().GetField("a").SetValue(context, true);
+            Assert.AreEqual("T", mi.Invoke(generator, new[] { context }));
+            context.GetType().GetField("a").SetValue(context, false);
+            Assert.AreEqual("F", mi.Invoke(generator, new[] { context }));
+        }
+
+        [Test]
+        public void CompileGeneratorTest8()
+        {
+            Assembly assembly = Compiler.Compile("MyCompiledAssembly", "{a:A|}{b:B|}{c:C|}");
+            var generator = assembly.CreateInstance("Generator");
+            var context = assembly.CreateInstance("Context");
+            Assert.IsNotNull(generator);
+            Assert.IsNotNull(context);
+            var mi = generator.GetType().GetMethod("Generate");
+            Assert.IsNotNull(mi);
+            context.GetType().GetField("a").SetValue(context, string.Empty);
+            context.GetType().GetField("b").SetValue(context, null);
+            context.GetType().GetField("c").SetValue(context, "qwerty");
+            Assert.AreEqual("C", mi.Invoke(generator, new[] { context }));
+        }
+
+        private void CheckTypeWithFields(Assembly assembly, string typeName, params string[] fieldNames)
 		{
 			var instance = assembly.CreateInstance(typeName);
 			Assert.IsNotNull(instance);
@@ -94,5 +141,12 @@ namespace Sfs.Compiler.Tests
 				Assert.IsNotNull(instance.GetType().GetField(fieldName));
 			}
 		}
+
+        private enum Nth
+        {
+            First,
+            Second,
+            Third
+        }
 	}
 }

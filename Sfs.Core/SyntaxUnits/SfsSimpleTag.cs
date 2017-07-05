@@ -19,14 +19,7 @@ namespace Sfs.Core.SyntaxUnits
 	    public override void Accept(ICompiler compiler)
 	    {
 		    var generator = compiler.MethodBuilder.GetILGenerator();
-			generator.Emit(OpCodes.Ldarg_1);
-		    var type = compiler.ContexType;
-		    foreach (var id in _ids)
-		    {
-			    var fieldInfo = type.GetField(id);
-				generator.Emit(OpCodes.Ldfld, fieldInfo);
-			    type = fieldInfo.FieldType;
-		    }
+            LoadContextField(generator, _ids, compiler.ContexType);
 		    generator.Emit(OpCodes.Ret);
 	    }
 
